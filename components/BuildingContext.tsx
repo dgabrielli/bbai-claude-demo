@@ -2,6 +2,7 @@
 
 import { BuildingData, Alert } from "@/lib/types";
 import buildingData from "@/data/building.json";
+import { alertHasSensorData } from "@/lib/tools";
 
 // Helper function to format timestamps consistently (fixes hydration errors)
 function formatTimestamp(timestamp: string): string {
@@ -18,10 +19,10 @@ function formatTimestamp(timestamp: string): string {
 }
 
 interface BuildingContextProps {
-  // This component reads data directly for demo simplicity
+  onAlertClick?: (alert: Alert) => void;
 }
 
-export default function BuildingContext({}: BuildingContextProps) {
+export default function BuildingContext({ onAlertClick }: BuildingContextProps) {
   const data: BuildingData = buildingData as BuildingData;
   const todaysAlerts = data.alerts.filter(alert => alert.status === "active");
 
@@ -113,32 +114,62 @@ export default function BuildingContext({}: BuildingContextProps) {
           <p className="text-sm text-gray-500">No active alerts</p>
         ) : (
           <div className="space-y-3">
-            {todaysAlerts.map((alert) => (
-              <div
-                key={alert.id}
-                className="p-3 rounded-lg border border-gray-200 bg-white shadow-sm"
-              >
-                <div className="flex items-start justify-between mb-2">
-                  <h4 className="text-sm font-semibold text-gray-900">{alert.title}</h4>
-                  <span
-                    className={`text-xs px-2 py-1 rounded ${getSeverityColor(
-                      alert.severity
-                    )}`}
-                  >
-                    {alert.severity}
-                  </span>
+            {todaysAlerts.map((alert) => {
+              const hasData = alertHasSensorData(alert.id);
+              return (
+                <div
+                  key={alert.id}
+                  className={`p-3 rounded-lg border border-gray-200 bg-white shadow-sm ${
+                    hasData
+                      ? "cursor-pointer hover:border-blue-300 hover:shadow-md transition-all"
+                      : ""
+                  }`}
+                  onClick={() => hasData && onAlertClick?.(alert)}
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-center space-x-2">
+                      <h4 className="text-sm font-semibold text-gray-900">{alert.title}</h4>
+                      {hasData && (
+                        <svg
+                          className="w-4 h-4 text-blue-500"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                          />
+                        </svg>
+                      )}
+                    </div>
+                    <span
+                      className={`text-xs px-2 py-1 rounded ${getSeverityColor(
+                        alert.severity
+                      )}`}
+                    >
+                      {alert.severity}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-600 mb-2">{alert.description}</p>
+                  {alert.affectedFloors.length > 0 && (
+                    <p className="text-xs text-gray-500">
+                      Floors: {alert.affectedFloors.join(", ")}
+                    </p>
+                  )}
+                  <div className="flex items-center justify-between mt-2">
+                    <p className="text-xs text-gray-400" suppressHydrationWarning>
+                      {formatTimestamp(alert.timestamp)}
+                    </p>
+                    {hasData && (
+                      <span className="text-xs text-blue-500">Click for details</span>
+                    )}
+                  </div>
                 </div>
-                <p className="text-xs text-gray-600 mb-2">{alert.description}</p>
-                {alert.affectedFloors.length > 0 && (
-                  <p className="text-xs text-gray-500">
-                    Floors: {alert.affectedFloors.join(", ")}
-                  </p>
-                )}
-                <p className="text-xs text-gray-400 mt-2" suppressHydrationWarning>
-                  {formatTimestamp(alert.timestamp)}
-                </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

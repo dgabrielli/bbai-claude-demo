@@ -1,15 +1,54 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import BuildingContext from "@/components/BuildingContext";
 import ChatPanel from "@/components/ChatPanel";
 import TelemetryPanel from "@/components/TelemetryPanel";
-import { AriaResponse, ProposedAction, AuditLogEntry } from "@/lib/types";
+import SensorChartModal from "@/components/SensorChartModal";
+import { AriaResponse, ProposedAction, AuditLogEntry, Alert } from "@/lib/types";
+import { getSensorDataForAlert } from "@/lib/tools";
 
 export default function Home() {
   const [proposedActions, setProposedActions] = useState<ProposedAction[]>([]);
   const [auditLog, setAuditLog] = useState<AuditLogEntry[]>([]);
   const [telemetryData, setTelemetryData] = useState<AriaResponse["telemetryData"]>();
+
+  // Modal state for sensor chart
+  const [modalState, setModalState] = useState<{
+    isOpen: boolean;
+    alert: Alert | null;
+    chartData: Array<{ time: string; value: number; setpoint?: number }>;
+    chartTitle: string;
+    valueLabel: string;
+    unit: string;
+  }>({
+    isOpen: false,
+    alert: null,
+    chartData: [],
+    chartTitle: "",
+    valueLabel: "",
+    unit: "",
+  });
+
+  // Handle alert click to open modal
+  const handleAlertClick = (alert: Alert) => {
+    const sensorData = getSensorDataForAlert(alert.id);
+    if (sensorData) {
+      setModalState({
+        isOpen: true,
+        alert,
+        chartData: sensorData.chartData,
+        chartTitle: sensorData.chartTitle,
+        valueLabel: sensorData.valueLabel,
+        unit: sensorData.unit,
+      });
+    }
+  };
+
+  // Close modal
+  const handleCloseModal = () => {
+    setModalState((prev) => ({ ...prev, isOpen: false }));
+  };
 
   // Handle new message from chat panel
   const handleNewMessage = (response: AriaResponse) => {
@@ -91,7 +130,7 @@ export default function Home() {
       <div className="flex-1 flex overflow-hidden">
         {/* Left Panel: Building Context */}
         <div className="w-80 flex-shrink-0">
-          <BuildingContext />
+          <BuildingContext onAlertClick={handleAlertClick} />
         </div>
 
         {/* Center Panel: Chat */}
@@ -114,6 +153,17 @@ export default function Home() {
           />
         </div>
       </div>
+
+      {/* Sensor Chart Modal */}
+      <SensorChartModal
+        isOpen={modalState.isOpen}
+        onClose={handleCloseModal}
+        alert={modalState.alert}
+        chartData={modalState.chartData}
+        chartTitle={modalState.chartTitle}
+        valueLabel={modalState.valueLabel}
+        unit={modalState.unit}
+      />
     </div>
   );
 }

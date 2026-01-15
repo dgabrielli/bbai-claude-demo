@@ -116,3 +116,9 @@ export interface AriaResponse {
 }
 
 export type IntentType = "hvac" | "anomalies" | "energy" | "workorder" | "unknown";
+
+export interface SensorChartData {
+  time: string;
+  value: number;
+  setpoint?: number;
+}

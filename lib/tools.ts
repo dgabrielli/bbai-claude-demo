@@ -87,3 +87,47 @@ export function getComfortComplaints(floor?: number): number {
   }
   return data.comfortComplaints.length;
 }
+
+/**
+ * DEMO LOGIC: Get sensor data for a specific alert
+ * Maps alert to its relevant floor's zone temperature data
+ * Returns null if no sensor data is available for the alert
+ */
+export function getSensorDataForAlert(alertId: string): {
+  chartData: Array<{ time: string; value: number; setpoint?: number }>;
+  chartTitle: string;
+  valueLabel: string;
+  unit: string;
+} | null {
+  const alert = data.alerts.find(a => a.id === alertId);
+  if (!alert) return null;
+
+  // Check if alert has affected floors with sensor data
+  if (alert.affectedFloors.length > 0) {
+    const floor = alert.affectedFloors[0]; // Use first affected floor
+    const floorKey = floor.toString();
+    const temps = data.zoneTemps[floorKey];
+
+    if (temps) {
+      return {
+        chartData: temps.map(t => ({
+          time: t.time,
+          value: t.temp,
+          setpoint: t.setpoint,
+        })),
+        chartTitle: `Floor ${floor} Temperature - Last 24h`,
+        valueLabel: "Temperature",
+        unit: "°F",
+      };
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Helper: Check if an alert has available sensor data
+ */
+export function alertHasSensorData(alertId: string): boolean {
+  return getSensorDataForAlert(alertId) !== null;
+}
