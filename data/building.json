@@ -1,0 +1,169 @@
+{
+  "buildingName": "HQ-12 (Demo)",
+  "floors": [
+    { "number": 1, "name": "Ground Floor", "area_sqft": 15000, "occupancy": 120 },
+    { "number": 2, "name": "Second Floor", "area_sqft": 15000, "occupancy": 150 },
+    { "number": 3, "name": "Third Floor", "area_sqft": 15000, "occupancy": 140 },
+    { "number": 4, "name": "Fourth Floor", "area_sqft": 15000, "occupancy": 135 },
+    { "number": 5, "name": "Fifth Floor", "area_sqft": 15000, "occupancy": 145 },
+    { "number": 6, "name": "Sixth Floor", "area_sqft": 15000, "occupancy": 130 },
+    { "number": 7, "name": "Seventh Floor", "area_sqft": 15000, "occupancy": 140 },
+    { "number": 8, "name": "Eighth Floor", "area_sqft": 15000, "occupancy": 135 },
+    { "number": 9, "name": "Ninth Floor", "area_sqft": 15000, "occupancy": 160 },
+    { "number": 10, "name": "Tenth Floor", "area_sqft": 15000, "occupancy": 145 },
+    { "number": 11, "name": "Eleventh Floor", "area_sqft": 15000, "occupancy": 140 },
+    { "number": 12, "name": "Twelfth Floor", "area_sqft": 15000, "occupancy": 120 }
+  ],
+  "hvac": {
+    "units": [
+      {
+        "id": "AHU-1",
+        "name": "Air Handling Unit 1",
+        "status": "operational",
+        "servesFloors": [1, 2, 3, 4],
+        "lastMaintenance": "2025-01-15",
+        "efficiency": 0.92,
+        "damperPosition": 65,
+        "supplyTemp": 55,
+        "returnTemp": 72
+      },
+      {
+        "id": "AHU-2",
+        "name": "Air Handling Unit 2",
+        "status": "operational",
+        "servesFloors": [5, 6, 7, 8],
+        "lastMaintenance": "2025-01-10",
+        "efficiency": 0.89,
+        "damperPosition": 70,
+        "supplyTemp": 54,
+        "returnTemp": 71
+      },
+      {
+        "id": "AHU-3",
+        "name": "Air Handling Unit 3",
+        "status": "fault",
+        "servesFloors": [9, 10, 11, 12],
+        "lastMaintenance": "2024-12-20",
+        "efficiency": 0.65,
+        "damperPosition": 15,
+        "supplyTemp": 68,
+        "returnTemp": 78,
+        "faultDescription": "Damper stuck at 15% - insufficient cooling to Floor 9"
+      }
+    ]
+  },
+  "zoneTemps": {
+    "9": [
+      { "time": "08:00", "temp": 72, "setpoint": 72 },
+      { "time": "09:00", "temp": 73, "setpoint": 72 },
+      { "time": "10:00", "temp": 75, "setpoint": 72 },
+      { "time": "10:30", "temp": 78, "setpoint": 72 },
+      { "time": "11:00", "temp": 79, "setpoint": 72 },
+      { "time": "12:00", "temp": 80, "setpoint": 72 },
+      { "time": "13:00", "temp": 81, "setpoint": 72 },
+      { "time": "14:00", "temp": 80, "setpoint": 72 },
+      { "time": "15:00", "temp": 79, "setpoint": 72 }
+    ],
+    "5": [
+      { "time": "08:00", "temp": 72, "setpoint": 72 },
+      { "time": "09:00", "temp": 72, "setpoint": 72 },
+      { "time": "10:00", "temp": 73, "setpoint": 72 },
+      { "time": "10:30", "temp": 73, "setpoint": 72 },
+      { "time": "11:00", "temp": 73, "setpoint": 72 },
+      { "time": "12:00", "temp": 74, "setpoint": 72 },
+      { "time": "13:00", "temp": 73, "setpoint": 72 },
+      { "time": "14:00", "temp": 73, "setpoint": 72 },
+      { "time": "15:00", "temp": 72, "setpoint": 72 }
+    ],
+    "12": [
+      { "time": "08:00", "temp": 71, "setpoint": 72 },
+      { "time": "09:00", "temp": 72, "setpoint": 72 },
+      { "time": "10:00", "temp": 72, "setpoint": 72 },
+      { "time": "10:30", "temp": 73, "setpoint": 72 },
+      { "time": "11:00", "temp": 73, "setpoint": 72 },
+      { "time": "12:00", "temp": 74, "setpoint": 72 },
+      { "time": "13:00", "temp": 73, "setpoint": 72 },
+      { "time": "14:00", "temp": 73, "setpoint": 72 },
+      { "time": "15:00", "temp": 72, "setpoint": 72 }
+    ]
+  },
+  "alerts": [
+    {
+      "id": "ALERT-001",
+      "timestamp": "2025-01-27T10:30:00Z",
+      "type": "HVAC",
+      "severity": "high",
+      "title": "AHU-3 Damper Malfunction",
+      "description": "Damper stuck at 15% causing insufficient cooling",
+      "affectedFloors": [9],
+      "status": "active"
+    },
+    {
+      "id": "ALERT-002",
+      "timestamp": "2025-01-27T09:15:00Z",
+      "type": "HVAC",
+      "severity": "medium",
+      "title": "Floor 9 Temperature Anomaly",
+      "description": "Zone temperature exceeding setpoint by 6°F",
+      "affectedFloors": [9],
+      "status": "active"
+    },
+    {
+      "id": "ALERT-003",
+      "timestamp": "2025-01-27T08:45:00Z",
+      "type": "Sensor",
+      "severity": "low",
+      "title": "Lighting Sensor Calibration Needed",
+      "description": "Sensor in Floor 3 conference room requires calibration",
+      "affectedFloors": [3],
+      "status": "active"
+    },
+    {
+      "id": "ALERT-004",
+      "timestamp": "2025-01-27T11:00:00Z",
+      "type": "HVAC",
+      "severity": "medium",
+      "title": "Elevator Shaft Temperature High",
+      "description": "Elevator shaft temp reading 85°F, may affect equipment",
+      "affectedFloors": [],
+      "status": "active"
+    }
+  ],
+  "energy": {
+    "today_kwh": 12450,
+    "yesterday_kwh": 11800,
+    "peak_kw": 1850,
+    "peak_time": "14:30",
+    "average_kw": 520
+  },
+  "comfortComplaints": [
+    {
+      "id": "COMP-001",
+      "timestamp": "2025-01-27T10:35:00Z",
+      "floor": 9,
+      "type": "too_hot",
+      "description": "Office space uncomfortably warm",
+      "reportedBy": "Occupant",
+      "status": "pending"
+    },
+    {
+      "id": "COMP-002",
+      "timestamp": "2025-01-27T11:00:00Z",
+      "floor": 9,
+      "type": "too_hot",
+      "description": "Conference room too hot for meeting",
+      "reportedBy": "Occupant",
+      "status": "pending"
+    },
+    {
+      "id": "COMP-003",
+      "timestamp": "2025-01-27T11:15:00Z",
+      "floor": 9,
+      "type": "too_hot",
+      "description": "Workstation area overheating",
+      "reportedBy": "Occupant",
+      "status": "pending"
+    }
+  ],
+  "workOrders": []
+}
