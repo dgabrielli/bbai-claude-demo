@@ -17,6 +17,20 @@ const SUGGESTED_PROMPTS = [
   "Create a work order for the likely cause.",
 ];
 
+// Helper function to format timestamps consistently (fixes hydration errors)
+function formatTimestamp(timestamp: string): string {
+  try {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  } catch {
+    return timestamp;
+  }
+}
+
 export default function ChatPanel({
   onNewMessage,
   onProposedActions,
@@ -132,8 +146,9 @@ export default function ChatPanel({
                 className={`text-xs mt-1 ${
                   message.role === "user" ? "text-blue-100" : "text-gray-400"
                 }`}
+                suppressHydrationWarning
               >
-                {new Date(message.timestamp).toLocaleTimeString()}
+                {formatTimestamp(message.timestamp)}
               </div>
             </div>
           </div>

@@ -3,6 +3,20 @@
 import { AriaResponse, ProposedAction, AuditLogEntry, HvacUnit } from "@/lib/types";
 import { useState } from "react";
 
+// Helper function to format timestamps consistently (fixes hydration errors)
+function formatTimestamp(timestamp: string): string {
+  try {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  } catch {
+    return timestamp;
+  }
+}
+
 interface TelemetryPanelProps {
   telemetryData?: AriaResponse["telemetryData"];
   proposedActions: ProposedAction[];
@@ -241,8 +255,8 @@ export default function TelemetryPanel({
                     >
                       {entry.type}
                     </span>
-                    <span className="text-gray-600">
-                      {new Date(entry.timestamp).toLocaleTimeString()}
+                    <span className="text-gray-600" suppressHydrationWarning>
+                      {formatTimestamp(entry.timestamp)}
                     </span>
                   </div>
                   <p className="text-gray-900">{entry.summary}</p>

@@ -3,6 +3,20 @@
 import { BuildingData, Alert } from "@/lib/types";
 import buildingData from "@/data/building.json";
 
+// Helper function to format timestamps consistently (fixes hydration errors)
+function formatTimestamp(timestamp: string): string {
+  try {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  } catch {
+    return timestamp;
+  }
+}
+
 interface BuildingContextProps {
   // This component reads data directly for demo simplicity
 }
@@ -120,8 +134,8 @@ export default function BuildingContext({}: BuildingContextProps) {
                     Floors: {alert.affectedFloors.join(", ")}
                   </p>
                 )}
-                <p className="text-xs text-gray-400 mt-2">
-                  {new Date(alert.timestamp).toLocaleTimeString()}
+                <p className="text-xs text-gray-400 mt-2" suppressHydrationWarning>
+                  {formatTimestamp(alert.timestamp)}
                 </p>
               </div>
             ))}
